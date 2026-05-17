@@ -1,14 +1,14 @@
 "use client";
 
 import ProtectedRoute from "@/components/ProtectedRoute";
-import HumanelyHeader from "@/components/HumanelyHeader";
+import EnsanitHeader from "@/components/EnsanitHeader";
 import BottomNav from "@/components/BottomNav";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedRoute>
       <div style={{ minHeight: "100vh", background: "#0B0B10" }}>
-        <HumanelyHeader />
+        <EnsanitHeader />
         <main
           style={{
             maxWidth: 480,

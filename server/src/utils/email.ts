@@ -39,7 +39,7 @@ export const sendEmail = async (options: EmailOptions) => {
     }
 
     const info = await transporter.sendMail({
-      from: '"Humanely Team" <noreply@humanely.com>',
+      from: '"Ensanit Team" <noreply@ensanit.com>',
       to: options.to,
       subject: options.subject,
       html: options.html,
@@ -59,10 +59,10 @@ export const sendEmail = async (options: EmailOptions) => {
 export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
   const html = `
     <div style="font-family: 'Georgia', serif; background-color: #171520; color: #EDE9DF; padding: 40px; text-align: center; max-width: 600px; margin: 0 auto; border-radius: 8px;">
-      <h1 style="color: #C8973A; font-weight: 500; margin-bottom: 24px;">Humanely</h1>
+      <h1 style="color: #C8973A; font-weight: 500; margin-bottom: 24px;">Ensanit</h1>
       <h2 style="font-size: 20px; font-weight: 400; margin-bottom: 16px;">Password Reset Request</h2>
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 14px; line-height: 1.6; margin-bottom: 32px;">
-        We received a request to reset the password for your Humanely account. 
+        We received a request to reset the password for your Ensanit account. 
         If you didn't make this request, you can safely ignore this email.
       </p>
       <a href="${resetLink}" style="display: inline-block; background: linear-gradient(135deg, #C8973A, #a67c30); color: #171520; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-family: 'Arial', sans-serif; font-size: 14px; font-weight: bold; margin-bottom: 32px;">
@@ -77,7 +77,7 @@ export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
 
   await sendEmail({
     to,
-    subject: "Reset Your Humanely Password",
+    subject: "Reset Your Ensanit Password",
     html,
   });
 };
@@ -97,7 +97,7 @@ export const sendOtpVerificationEmail = async (
 
   const html = `
     <div style="font-family: 'Georgia', serif; background-color: #171520; color: #EDE9DF; padding: 40px; text-align: center; max-width: 600px; margin: 0 auto; border-radius: 8px;">
-      <h1 style="color: #C8973A; font-weight: 500; margin-bottom: 8px;">Humanely</h1>
+      <h1 style="color: #C8973A; font-weight: 500; margin-bottom: 8px;">Ensanit</h1>
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px;">Email Verification</p>
 
       <h2 style="font-size: 20px; font-weight: 400; margin-bottom: 12px;">Hello, ${name}</h2>
@@ -111,14 +111,14 @@ export const sendOtpVerificationEmail = async (
       </div>
 
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 12px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-        If you didn't create a Humanely account, you can safely ignore this email.
+        If you didn't create an Ensanit account, you can safely ignore this email.
       </p>
     </div>
   `;
 
   await sendEmail({
     to,
-    subject: "Your Humanely Verification Code",
+    subject: "Your Ensanit Verification Code",
     html,
   });
 };
@@ -126,12 +126,12 @@ export const sendOtpVerificationEmail = async (
 export const sendWelcomeEmail = async (to: string, name: string) => {
   const html = `
     <div style="font-family: 'Georgia', serif; background-color: #171520; color: #EDE9DF; padding: 40px; text-align: center; max-width: 600px; margin: 0 auto; border-radius: 8px;">
-      <h1 style="color: #C8973A; font-weight: 500; margin-bottom: 8px;">Humanely</h1>
+      <h1 style="color: #C8973A; font-weight: 500; margin-bottom: 8px;">Ensanit</h1>
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px;">Welcome Aboard</p>
 
       <h2 style="font-size: 22px; font-weight: 400; margin-bottom: 16px;">You're in, ${name}!</h2>
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 14px; line-height: 1.8; margin-bottom: 32px;">
-        Your account has been verified and is ready to go. We're thrilled to have you as part of the Humanely community — a place built for genuine, meaningful connections.
+        Your account has been verified and is ready to go. We're thrilled to have you as part of the Ensanit community — a place built for genuine, meaningful connections.
       </p>
 
       <div style="background-color: #1E1B2E; border: 1px solid rgba(200,151,58,0.2); border-radius: 8px; padding: 24px; margin-bottom: 32px; text-align: left;">
@@ -145,14 +145,14 @@ export const sendWelcomeEmail = async (to: string, name: string) => {
 
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 12px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
         If you have any questions, feel free to reach out to our support team.<br>
-        <span style="color: #C8973A;">The Humanely Team</span>
+        <span style="color: #C8973A;">The Ensanit Team</span>
       </p>
     </div>
   `;
 
   await sendEmail({
     to,
-    subject: "Welcome to Humanely",
+    subject: "Welcome to Ensanit",
     html,
   });
 };

@@ -55,7 +55,7 @@ app.use("/api/log", logRoutes);
 app.use("/api/reflection", reflectionRoutes);
 
 app.get("/", (_req, res) => {
-  res.json({ message: "Humanely server running" });
+  res.json({ message: "Ensanit server running" });
 });
 
 const PORT = process.env.PORT || 5000;

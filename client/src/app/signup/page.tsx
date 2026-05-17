@@ -10,17 +10,30 @@ import { z } from "zod";
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  username: z.string().min(3, "Username must be at least 3 characters").max(30, "Username must be at most 30 characters"),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(30, "Username must be at most 30 characters"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters").regex(/^(?=.*[A-Za-z])(?=.*\d).*$/, "Password must contain at least one letter and one number"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d).*$/,
+      "Password must contain at least one letter and one number",
+    ),
   dateOfBirth: z.string().optional(),
 });
 
 export default function Signup() {
   const { mutate, isPending, error } = useSignup();
   const { mutate: googleMutate } = useGoogleLogin();
-  const { mutate: verifyOtpMutate, isPending: isVerifying, error: verifyError } = useVerifyOtp();
-  
+  const {
+    mutate: verifyOtpMutate,
+    isPending: isVerifying,
+    error: verifyError,
+  } = useVerifyOtp();
+
   const [step, setStep] = useState<1 | 2>(1);
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
@@ -31,7 +44,9 @@ export default function Signup() {
     dateOfBirth: "",
   });
   const [otp, setOtp] = useState("");
-  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
+  const [validationErrors, setValidationErrors] = useState<{
+    [key: string]: string;
+  }>({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +57,7 @@ export default function Signup() {
       mutate(form, {
         onSuccess: () => {
           setStep(2);
-        }
+        },
       });
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -130,7 +145,7 @@ export default function Signup() {
                   color: "#7A7690",
                 }}
               >
-                Join Humanely to begin your journey
+                Join Ensanit to begin your journey
               </p>
             </div>
 
@@ -164,7 +179,9 @@ export default function Signup() {
                   required
                 />
                 {validationErrors.name && (
-                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>{validationErrors.name}</p>
+                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>
+                    {validationErrors.name}
+                  </p>
                 )}
               </div>
 
@@ -186,11 +203,15 @@ export default function Signup() {
                   className="h-input"
                   placeholder="e.g. janedoe"
                   value={form.username}
-                  onChange={(e) => setForm({ ...form, username: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, username: e.target.value })
+                  }
                   required
                 />
                 {validationErrors.username && (
-                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>{validationErrors.username}</p>
+                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>
+                    {validationErrors.username}
+                  </p>
                 )}
               </div>
 
@@ -216,7 +237,9 @@ export default function Signup() {
                   required
                 />
                 {validationErrors.email && (
-                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>{validationErrors.email}</p>
+                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>
+                    {validationErrors.email}
+                  </p>
                 )}
               </div>
 
@@ -239,7 +262,9 @@ export default function Signup() {
                     className="h-input"
                     placeholder="••••••••"
                     value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, password: e.target.value })
+                    }
                     required
                     style={{ paddingRight: 40 }}
                   />
@@ -262,7 +287,9 @@ export default function Signup() {
                   </button>
                 </div>
                 {validationErrors.password && (
-                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>{validationErrors.password}</p>
+                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>
+                    {validationErrors.password}
+                  </p>
                 )}
               </div>
             </div>
@@ -429,16 +456,26 @@ export default function Signup() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                   required
-                  style={{ textAlign: "center", letterSpacing: "0.2em", fontSize: 20 }}
+                  style={{
+                    textAlign: "center",
+                    letterSpacing: "0.2em",
+                    fontSize: 20,
+                  }}
                 />
                 {validationErrors.otp && (
-                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>{validationErrors.otp}</p>
+                  <p style={{ color: "#C85E5E", fontSize: 12, marginTop: 4 }}>
+                    {validationErrors.otp}
+                  </p>
                 )}
               </div>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <button type="submit" className="btn-gold" disabled={isVerifying || otp.length !== 6}>
+              <button
+                type="submit"
+                className="btn-gold"
+                disabled={isVerifying || otp.length !== 6}
+              >
                 {isVerifying ? "Verifying..." : "Verify Code"}
               </button>
             </div>

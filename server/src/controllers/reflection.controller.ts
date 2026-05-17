@@ -40,7 +40,7 @@ export const generateReflection = async (req: Request, res: Response) => {
       return res.json({ reflection: mockReflection });
     }
 
-    const systemPrompt = `You are a compassionate, non-judgmental AI companion for a self-reflection app called Humanely. 
+    const systemPrompt = `You are a compassionate, non-judgmental AI companion for a self-reflection app called Ensanit. 
 Your role is to help users understand their day — not to judge, lecture, or prescribe. 
 Speak directly to the user as "you". Reference specific actions they logged by name when relevant.
 Acknowledge both growth and moments of difficulty with equal warmth.
@@ -110,15 +110,17 @@ export const generateWeeklySummary = async (req: Request, res: Response) => {
 
     const latestLog = logs[0];
     const avgScore = Math.round(
-      logs.reduce((sum, log) => sum + log.humanityScore, 0) / logs.length
+      logs.reduce((sum, log) => sum + log.humanityScore, 0) / logs.length,
     );
     const totalPos = logs.reduce(
-      (sum, log) => sum + log.actions.filter((a: any) => a.type === "positive").length,
-      0
+      (sum, log) =>
+        sum + log.actions.filter((a: any) => a.type === "positive").length,
+      0,
     );
     const totalNeg = logs.reduce(
-      (sum, log) => sum + log.actions.filter((a: any) => a.type === "negative").length,
-      0
+      (sum, log) =>
+        sum + log.actions.filter((a: any) => a.type === "negative").length,
+      0,
     );
 
     // Filter out _id and other non-trait keys if any, though mongoose traits object is typed
@@ -128,10 +130,12 @@ export const generateWeeklySummary = async (req: Request, res: Response) => {
       ["honesty", traits.honesty],
       ["discipline", traits.discipline],
       ["patience", traits.patience],
-      ["gratitude", traits.gratitude]
+      ["gratitude", traits.gratitude],
     ];
-    
-    const sortedTraits = traitsEntries.sort((a, b) => (b[1] as number) - (a[1] as number));
+
+    const sortedTraits = traitsEntries.sort(
+      (a, b) => (b[1] as number) - (a[1] as number),
+    );
     const strongestTrait = sortedTraits[0];
     const weakestTrait = sortedTraits[sortedTraits.length - 1];
 
@@ -142,7 +146,7 @@ export const generateWeeklySummary = async (req: Request, res: Response) => {
       return res.json({ summary: mockSummary });
     }
 
-    const systemPrompt = `You are a compassionate, non-judgmental AI companion for a self-reflection app called Humanely. 
+    const systemPrompt = `You are a compassionate, non-judgmental AI companion for a self-reflection app called Ensanit. 
 Generate a thoughtful, personal weekly character summary.
 Speak directly to the user as "you". 
 Acknowledge both growth and moments of difficulty with equal warmth.
@@ -171,7 +175,7 @@ Write a warm, insightful weekly summary.`;
             maxOutputTokens: 300,
           },
         }),
-      }
+      },
     );
 
     if (!geminiRes.ok) {
@@ -189,7 +193,9 @@ Write a warm, insightful weekly summary.`;
     return res.json({ summary });
   } catch (e) {
     console.error("Weekly summary error:", e);
-    return res.status(500).json({ message: "Could not generate weekly summary" });
+    return res
+      .status(500)
+      .json({ message: "Could not generate weekly summary" });
   }
 };
 

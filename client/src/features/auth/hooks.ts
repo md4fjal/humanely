@@ -4,7 +4,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { BASE_URL, fetcher } from "@/lib/api";
-import { loginUser, logoutUser, signupUser, googleLoginUser, verifyOtpUser, forgotPassword, resetPassword } from "./api";
+import {
+  loginUser,
+  logoutUser,
+  signupUser,
+  googleLoginUser,
+  verifyOtpUser,
+  forgotPassword,
+  resetPassword,
+} from "./api";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -72,7 +80,7 @@ export const useVerifyOtp = () => {
     mutationFn: verifyOtpUser,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: authKeys.me() });
-      toast.success("Email verified successfully! Welcome to Humanely.");
+      toast.success("Email verified successfully! Welcome to Ensanit.");
       router.push("/");
     },
     onError: (err: Error) => {
@@ -112,7 +120,7 @@ export const useForgotPassword = () => {
 
 export const useResetPassword = () => {
   const router = useRouter();
-  
+
   return useMutation({
     mutationFn: resetPassword,
     onSuccess: (data: any) => {
@@ -124,4 +132,3 @@ export const useResetPassword = () => {
     },
   });
 };
-

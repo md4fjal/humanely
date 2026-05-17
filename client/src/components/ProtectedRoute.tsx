@@ -15,7 +15,7 @@ export default function ProtectedRoute({
   const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setIsOnboarded(localStorage.getItem("humanely_onboarded") === "true");
+    setIsOnboarded(localStorage.getItem("ensanit_onboarded") === "true");
   }, []);
 
   useEffect(() => {

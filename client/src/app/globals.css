@@ -54,7 +54,7 @@ body {
   color: var(--text-primary);
 }
 
-/* Humanely typography utilities */
+/* Ensanit typography utilities */
 .font-serif {
   font-family: var(--font-serif);
 }

@@ -6,7 +6,7 @@ import { useAuth, useLogout } from "@/features/auth/hooks";
 import { useLog } from "@/features/log/hooks";
 import { LogOut, User, X } from "lucide-react";
 
-export default function HumanelyHeader() {
+export default function EnsanitHeader() {
   const { data: authData } = useAuth();
   const { data: log } = useLog();
   const { mutate: logout, isPending: loggingOut } = useLogout();
@@ -73,7 +73,7 @@ export default function HumanelyHeader() {
                 lineHeight: 1,
               }}
             >
-              Humanely
+              Ensanit
             </h1>
             <p
               style={{
@@ -89,7 +89,10 @@ export default function HumanelyHeader() {
           </div>
 
           {/* Right: Score badge + avatar */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }} ref={dropRef}>
+          <div
+            style={{ display: "flex", alignItems: "center", gap: 12 }}
+            ref={dropRef}
+          >
             {score !== null && (
               <div
                 style={{
@@ -185,18 +188,30 @@ export default function HumanelyHeader() {
                         transition: "all 0.15s",
                       }}
                       onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.04)";
-                        (e.currentTarget as HTMLButtonElement).style.color = "#EDE9DF";
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.background = "rgba(255,255,255,0.04)";
+                        (e.currentTarget as HTMLButtonElement).style.color =
+                          "#EDE9DF";
                       }}
                       onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                        (e.currentTarget as HTMLButtonElement).style.color = "#7A7690";
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.background = "transparent";
+                        (e.currentTarget as HTMLButtonElement).style.color =
+                          "#7A7690";
                       }}
                     >
                       <User size={14} />
                       Profile
                     </button>
-                    <div style={{ height: 1, background: "#1E1E2E", margin: "4px 0" }} />
+                    <div
+                      style={{
+                        height: 1,
+                        background: "#1E1E2E",
+                        margin: "4px 0",
+                      }}
+                    />
                     <button
                       onClick={() => {
                         setDropOpen(false);
@@ -220,10 +235,14 @@ export default function HumanelyHeader() {
                         opacity: loggingOut ? 0.5 : 1,
                       }}
                       onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.background = "rgba(200,94,94,0.08)";
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.background = "rgba(200,94,94,0.08)";
                       }}
                       onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.background = "transparent";
                       }}
                     >
                       <LogOut size={14} />
@@ -255,7 +274,12 @@ export default function HumanelyHeader() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)" }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "rgba(0,0,0,0.6)",
+                backdropFilter: "blur(8px)",
+              }}
               onClick={() => setProfileOpen(false)}
             />
             <motion.div
@@ -274,24 +298,51 @@ export default function HumanelyHeader() {
               }}
             >
               <div style={{ padding: 28 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                  <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "#EDE9DF" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 24,
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontFamily: "Cormorant Garamond, serif",
+                      fontSize: 22,
+                      color: "#EDE9DF",
+                    }}
+                  >
                     Your Profile
                   </h2>
                   <button
                     onClick={() => setProfileOpen(false)}
-                    style={{ background: "none", border: "none", color: "#4A475E", cursor: "pointer", padding: 4 }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#4A475E",
+                      cursor: "pointer",
+                      padding: 4,
+                    }}
                   >
                     <X size={18} />
                   </button>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 16,
+                  }}
+                >
                   <div
                     style={{
                       width: 72,
                       height: 72,
                       borderRadius: "50%",
-                      background: "linear-gradient(135deg, rgba(200,151,58,0.15), rgba(91,184,122,0.1))",
+                      background:
+                        "linear-gradient(135deg, rgba(200,151,58,0.15), rgba(91,184,122,0.1))",
                       border: "2px solid rgba(200,151,58,0.3)",
                       display: "flex",
                       alignItems: "center",
@@ -305,10 +356,23 @@ export default function HumanelyHeader() {
                     {authData.user.name?.[0]?.toUpperCase() || "?"}
                   </div>
                   <div style={{ textAlign: "center" }}>
-                    <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "#EDE9DF" }}>
+                    <p
+                      style={{
+                        fontFamily: "Cormorant Garamond, serif",
+                        fontSize: 22,
+                        color: "#EDE9DF",
+                      }}
+                    >
                       {authData.user.name || authData.user.username}
                     </p>
-                    <p style={{ fontFamily: "DM Sans, sans-serif", fontSize: 13, color: "#4A475E", marginTop: 4 }}>
+                    <p
+                      style={{
+                        fontFamily: "DM Sans, sans-serif",
+                        fontSize: 13,
+                        color: "#4A475E",
+                        marginTop: 4,
+                      }}
+                    >
                       {authData.user.email}
                     </p>
                   </div>
@@ -325,10 +389,22 @@ export default function HumanelyHeader() {
                         justifyContent: "space-between",
                       }}
                     >
-                      <span style={{ fontFamily: "DM Sans, sans-serif", fontSize: 13, color: "#7A7690" }}>
+                      <span
+                        style={{
+                          fontFamily: "DM Sans, sans-serif",
+                          fontSize: 13,
+                          color: "#7A7690",
+                        }}
+                      >
                         Today's Humanity Score
                       </span>
-                      <span style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: getScoreColor(score) }}>
+                      <span
+                        style={{
+                          fontFamily: "Cormorant Garamond, serif",
+                          fontSize: 22,
+                          color: getScoreColor(score),
+                        }}
+                      >
                         {score}
                       </span>
                     </div>

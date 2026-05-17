@@ -14,7 +14,10 @@ export default function Header() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     }
@@ -28,7 +31,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex justify-between items-center h-12">
             {/* Logo Section */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.02 }}
@@ -39,29 +42,33 @@ export default function Header() {
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-zinc-100 to-zinc-400 bg-clip-text text-transparent group-hover:from-white group-hover:to-zinc-300 transition-colors duration-300">
-                Humanely
+                Ensanit
               </h1>
             </motion.div>
 
             {/* User Section & Dropdown */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center gap-4 relative"
               ref={dropdownRef}
             >
               {!isLoading && data?.user && (
-                <div 
+                <div
                   className="group flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-zinc-900/50 transition-colors cursor-pointer"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                   <div className="w-9 h-9 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/50 flex items-center justify-center text-zinc-300 font-medium shadow-sm group-hover:border-zinc-600 transition-colors">
-                    {data.user.name?.[0]?.toUpperCase() || data.user.username?.[0]?.toUpperCase() || "?"}
+                    {data.user.name?.[0]?.toUpperCase() ||
+                      data.user.username?.[0]?.toUpperCase() ||
+                      "?"}
                   </div>
-                  <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`w-4 h-4 text-zinc-500 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+                  />
                 </div>
               )}
-              
+
               <AnimatePresence>
                 {isDropdownOpen && (
                   <motion.div
@@ -75,7 +82,7 @@ export default function Header() {
                       <div className="px-3 py-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
                         Account
                       </div>
-                      <button 
+                      <button
                         onClick={() => {
                           setIsDropdownOpen(false);
                           setIsProfileOpen(true);
@@ -89,9 +96,9 @@ export default function Header() {
                         <Settings className="w-4 h-4" />
                         Settings
                       </button>
-                      
+
                       <div className="h-px bg-zinc-800 my-2" />
-                      
+
                       <button
                         onClick={() => {
                           setIsDropdownOpen(false);
@@ -131,21 +138,27 @@ export default function Header() {
             >
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-bold text-white">Profile Details</h2>
-                  <button 
+                  <h2 className="text-xl font-bold text-white">
+                    Profile Details
+                  </h2>
+                  <button
                     onClick={() => setIsProfileOpen(false)}
                     className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-xl transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                
+
                 <div className="flex flex-col items-center space-y-4">
                   <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border-2 border-indigo-500/30 flex items-center justify-center text-4xl font-bold text-indigo-300 shadow-xl shadow-indigo-500/10">
-                    {data.user.name?.[0]?.toUpperCase() || data.user.username?.[0]?.toUpperCase() || "?"}
+                    {data.user.name?.[0]?.toUpperCase() ||
+                      data.user.username?.[0]?.toUpperCase() ||
+                      "?"}
                   </div>
                   <div className="text-center">
-                    <h3 className="text-2xl font-bold text-white">{data.user.name || data.user.username}</h3>
+                    <h3 className="text-2xl font-bold text-white">
+                      {data.user.name || data.user.username}
+                    </h3>
                     <p className="text-zinc-400 mt-1">{data.user.email}</p>
                   </div>
                 </div>
@@ -153,7 +166,9 @@ export default function Header() {
                 <div className="mt-8 pt-6 border-t border-zinc-800/50">
                   <div className="bg-zinc-900/50 rounded-xl p-4">
                     <div className="text-sm text-zinc-500 mb-1">Username</div>
-                    <div className="text-zinc-200 font-medium">{data.user.username}</div>
+                    <div className="text-zinc-200 font-medium">
+                      {data.user.username}
+                    </div>
                   </div>
                 </div>
               </div>

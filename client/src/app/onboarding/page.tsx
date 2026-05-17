@@ -24,12 +24,20 @@ const SLIDES = [
   },
 ];
 
-const INTENTION_CHIPS = ["Patience", "Kindness", "Honesty", "Discipline", "Presence"];
+const INTENTION_CHIPS = [
+  "Patience",
+  "Kindness",
+  "Honesty",
+  "Discipline",
+  "Presence",
+];
 
 export default function OnboardingPage() {
   const router = useRouter();
   const { mutate: setIntention, isPending } = useSetIntention();
-  const [step, setStep] = useState<"welcome" | "slides" | "intention">("welcome");
+  const [step, setStep] = useState<"welcome" | "slides" | "intention">(
+    "welcome",
+  );
   const [slideIndex, setSlideIndex] = useState(0);
   const [intentionInput, setIntentionInput] = useState("");
 
@@ -52,13 +60,13 @@ export default function OnboardingPage() {
     if (intention) {
       setIntention(intention, {
         onSuccess: () => {
-          localStorage.setItem("humanely_onboarded", "true");
+          localStorage.setItem("ensanit_onboarded", "true");
           router.push("/");
         },
       });
     } else {
       // Skip
-      localStorage.setItem("humanely_onboarded", "true");
+      localStorage.setItem("ensanit_onboarded", "true");
       router.push("/");
     }
   }
@@ -87,7 +95,8 @@ export default function OnboardingPage() {
           width: 500,
           height: 500,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(200,151,58,0.06) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(200,151,58,0.06) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -99,12 +108,20 @@ export default function OnboardingPage() {
           width: 300,
           height: 300,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(91,184,122,0.04) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(91,184,122,0.04) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
 
-      <div style={{ width: "100%", maxWidth: 400, position: "relative", zIndex: 1 }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 400,
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
         <AnimatePresence mode="wait">
           {/* WELCOME */}
           {step === "welcome" && (
@@ -114,7 +131,13 @@ export default function OnboardingPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 32 }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                gap: 32,
+              }}
             >
               {/* App name */}
               <div>
@@ -128,9 +151,16 @@ export default function OnboardingPage() {
                     lineHeight: 1,
                   }}
                 >
-                  Humanely
+                  Ensanit
                 </h1>
-                <div style={{ width: 48, height: 1, background: "rgba(200,151,58,0.4)", margin: "20px auto" }} />
+                <div
+                  style={{
+                    width: 48,
+                    height: 1,
+                    background: "rgba(200,151,58,0.4)",
+                    margin: "20px auto",
+                  }}
+                />
                 <p
                   style={{
                     fontFamily: "Cormorant Garamond, serif",
@@ -222,7 +252,9 @@ export default function OnboardingPage() {
               </div>
 
               {/* Dots */}
-              <div style={{ display: "flex", justifyContent: "center", gap: 8 }}>
+              <div
+                style={{ display: "flex", justifyContent: "center", gap: 8 }}
+              >
                 {SLIDES.map((_, i) => (
                   <div
                     key={i}
@@ -256,7 +288,9 @@ export default function OnboardingPage() {
                   onClick={handleSlideNext}
                   style={{ flex: 2 }}
                 >
-                  {slideIndex < SLIDES.length - 1 ? "Continue" : "Set my intention"}
+                  {slideIndex < SLIDES.length - 1
+                    ? "Continue"
+                    : "Set my intention"}
                   <ChevronRight size={16} />
                 </button>
               </div>
@@ -302,7 +336,9 @@ export default function OnboardingPage() {
                   className="h-input"
                   value={intentionInput}
                   onChange={(e) => setIntentionInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") handleSetIntention(); }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSetIntention();
+                  }}
                   placeholder="e.g. I want to stay patient today..."
                   style={{ marginBottom: 14 }}
                 />
@@ -313,9 +349,10 @@ export default function OnboardingPage() {
                       onClick={() => setIntentionInput(chip)}
                       style={{
                         padding: "5px 14px",
-                        background: intentionInput === chip
-                          ? "rgba(200,151,58,0.2)"
-                          : "rgba(200,151,58,0.06)",
+                        background:
+                          intentionInput === chip
+                            ? "rgba(200,151,58,0.2)"
+                            : "rgba(200,151,58,0.06)",
                         border: `1px solid ${intentionInput === chip ? "rgba(200,151,58,0.5)" : "rgba(200,151,58,0.15)"}`,
                         borderRadius: 999,
                         color: intentionInput === chip ? "#C8973A" : "#7A7690",
@@ -331,7 +368,9 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 10 }}
+              >
                 <button
                   className="btn-gold"
                   disabled={isPending || !intentionInput.trim()}

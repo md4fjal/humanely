@@ -20,7 +20,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Humanely — How humanely are you living?",
+  title: "Ensanit — How humanely are you living?",
   description:
     "A private mirror for your daily choices. Track your humanity score, log actions, and reflect on your character with AI.",
 };
