@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import otpGenerator from "otp-generator";
 import { User } from "../models/user.model.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import { sendEmail } from "../utils/email.js";
 import { OAuth2Client } from "google-auth-library";
-
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const COOKIE_OPTIONS = {
@@ -23,10 +24,18 @@ export const signup = async (req: Request, res: Response) => {
       $or: [{ username }, { email }],
     });
     if (existing) {
-      return res.status(400).json({ message: "User or email already exists" });
+      if (!existing.isVerified && existing.email === email) {
+         // Optionally, we could resend OTP here if they try to signup again,
+         // but for simplicity, we'll just delete the old unverified account and recreate,
+         // or we can just block it. Let's delete it if unverified to allow retry.
+         await User.deleteOne({ _id: existing._id });
+      } else {
+        return res.status(400).json({ message: "User or email already exists" });
+      }
     }
 
     const hashed = await bcrypt.hash(password, 10);
+    const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
 
     const user = await User.create({
       name,
@@ -34,11 +43,76 @@ export const signup = async (req: Request, res: Response) => {
       email,
       password: hashed,
       dateOfBirth,
+      isVerified: false,
+      verificationOtp: otp,
+      verificationOtpExpiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
     });
 
-    return res.status(201).json({ message: "User signed up" });
+    await sendEmail({
+      to: email,
+      subject: "Verify Your Humanely Account",
+      html: `
+        <h1>Welcome to Humanely!</h1>
+        <p>Your verification code is: <strong>${otp}</strong></p>
+        <p>This code will expire in 10 minutes.</p>
+      `,
+    });
+
+    return res.status(201).json({ message: "User registered. Please verify your email with the OTP sent." });
   } catch (error) {
+    console.error("Signup error:", error);
     return res.status(500).json({ message: "Registration failed" });
+  }
+};
+
+// VERIFY OTP
+export const verifyOtp = async (req: Request, res: Response) => {
+  try {
+    const { email, otp } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ message: "User is already verified" });
+    }
+
+    if (
+      user.verificationOtp !== otp ||
+      !user.verificationOtpExpiresAt ||
+      user.verificationOtpExpiresAt.getTime() < Date.now()
+    ) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    user.isVerified = true;
+    user.verificationOtp = undefined;
+    user.verificationOtpExpiresAt = undefined;
+
+    const accessToken = generateAccessToken(user._id.toString());
+    const refreshToken = generateRefreshToken(user._id.toString());
+
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.cookie("accessToken", accessToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.setHeader("Authorization", `Bearer ${accessToken}`);
+
+    return res.status(200).json({ message: "Email verified successfully" });
+  } catch (error) {
+    console.error("Verify OTP error:", error);
+    return res.status(500).json({ message: "Verification failed" });
   }
 };
 
@@ -51,6 +125,10 @@ export const login = async (req: Request, res: Response) => {
       $or: [{ username }, { email: username }],
     });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    if (!user.isVerified) {
+      return res.status(403).json({ message: "Please verify your email address before logging in." });
+    }
 
     const match = await bcrypt.compare(password, user.password!);
     if (!match) return res.status(400).json({ message: "Invalid credentials" });
@@ -205,6 +283,7 @@ export const googleLogin = async (req: Request, res: Response) => {
         username: uniqueUsername,
         googleId,
         authProvider: "google",
+        isVerified: true,
       });
     } else {
       // If user exists but no googleId, link the account

@@ -9,6 +9,9 @@ export interface IUser extends Document {
   authProvider?: string;
   googleId?: string;
   refreshToken?: string;
+  isVerified: boolean;
+  verificationOtp?: string;
+  verificationOtpExpiresAt?: Date;
 }
 
 const userSchema = new Schema<IUser>(
@@ -21,6 +24,9 @@ const userSchema = new Schema<IUser>(
     authProvider: { type: String, enum: ["local", "google"], default: "local" },
     googleId: { type: String, unique: true, sparse: true },
     refreshToken: { type: String, select: false },
+    isVerified: { type: Boolean, default: false },
+    verificationOtp: { type: String },
+    verificationOtpExpiresAt: { type: Date },
   },
   { timestamps: true },
 );

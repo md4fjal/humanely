@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { BASE_URL, fetcher } from "@/lib/api";
-import { loginUser, logoutUser, signupUser, googleLoginUser } from "./api";
+import { loginUser, logoutUser, signupUser, googleLoginUser, verifyOtpUser } from "./api";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -53,16 +53,30 @@ export const useGoogleLogin = () => {
 };
 
 export const useSignup = () => {
-  const router = useRouter();
-
   return useMutation({
     mutationFn: signupUser,
     onSuccess: () => {
-      toast.success("Account created successfully!");
-      router.push("/login");
+      toast.success("Account created! Please verify your email.");
     },
     onError: (err: Error) => {
       toast.error(err.message || "Registration failed");
+    },
+  });
+};
+
+export const useVerifyOtp = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: verifyOtpUser,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: authKeys.me() });
+      toast.success("Email verified successfully! Welcome to Humanely.");
+      router.push("/");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "OTP Verification failed");
     },
   });
 };

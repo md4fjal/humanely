@@ -12,6 +12,13 @@ export const signupUser = (data: {
   });
 };
 
+export const verifyOtpUser = (data: { email: string; otp: string }) => {
+  return fetcher(`${BASE_URL}/auth/verify-otp`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
 export const loginUser = (data: { username: string; password: string }) => {
   return fetcher(`${BASE_URL}/auth/login`, {
     method: "POST",
