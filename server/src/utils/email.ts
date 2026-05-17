@@ -100,7 +100,7 @@ export const sendOtpVerificationEmail = async (
       <h1 style="color: #C8973A; font-weight: 500; margin-bottom: 8px;">Humanely</h1>
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px;">Email Verification</p>
 
-      <h2 style="font-size: 20px; font-weight: 400; margin-bottom: 12px;">Hello, ${name} 👋</h2>
+      <h2 style="font-size: 20px; font-weight: 400; margin-bottom: 12px;">Hello, ${name}</h2>
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 14px; line-height: 1.6; margin-bottom: 32px;">
         Thanks for signing up! Use the verification code below to confirm your email address.
         This code expires in <strong style="color: #EDE9DF;">10 minutes</strong>.
@@ -129,7 +129,7 @@ export const sendWelcomeEmail = async (to: string, name: string) => {
       <h1 style="color: #C8973A; font-weight: 500; margin-bottom: 8px;">Humanely</h1>
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px;">Welcome Aboard</p>
 
-      <h2 style="font-size: 22px; font-weight: 400; margin-bottom: 16px;">You're in, ${name}! 🎉</h2>
+      <h2 style="font-size: 22px; font-weight: 400; margin-bottom: 16px;">You're in, ${name}!</h2>
       <p style="color: #7A7690; font-family: 'Arial', sans-serif; font-size: 14px; line-height: 1.8; margin-bottom: 32px;">
         Your account has been verified and is ready to go. We're thrilled to have you as part of the Humanely community — a place built for genuine, meaningful connections.
       </p>
@@ -152,7 +152,7 @@ export const sendWelcomeEmail = async (to: string, name: string) => {
 
   await sendEmail({
     to,
-    subject: "Welcome to Humanely 🌿",
+    subject: "Welcome to Humanely",
     html,
   });
 };
