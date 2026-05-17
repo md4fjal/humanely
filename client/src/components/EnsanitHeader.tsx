@@ -90,7 +90,12 @@ export default function EnsanitHeader() {
 
           {/* Right: Score badge + avatar */}
           <div
-            style={{ display: "flex", alignItems: "center", gap: 12 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              position: "relative",
+            }}
             ref={dropRef}
           >
             {score !== null && (
@@ -154,7 +159,7 @@ export default function EnsanitHeader() {
                   style={{
                     position: "absolute",
                     top: "100%",
-                    right: 20,
+                    right: 0,
                     marginTop: 8,
                     width: 200,
                     background: "#12121A",
