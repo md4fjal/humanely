@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/features/auth/hooks";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Loader from "./Loader";
 
 export default function ProtectedRoute({
@@ -12,23 +12,18 @@ export default function ProtectedRoute({
 }) {
   const { data, isLoading, isError } = useAuth();
   const router = useRouter();
-  const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    setIsOnboarded(localStorage.getItem("ensanit_onboarded") === "true");
-  }, []);
 
   useEffect(() => {
     if (!isLoading && (isError || !data?.user)) {
       router.replace("/login");
-    } else if (!isLoading && data?.user && isOnboarded === false) {
+    } else if (!isLoading && data?.user && !data.user.isOnboarded) {
       router.replace("/onboarding");
     }
-  }, [isLoading, isError, data, router, isOnboarded]);
+  }, [isLoading, isError, data, router]);
 
-  if (isLoading || isOnboarded === null) return <Loader />;
+  if (isLoading) return <Loader />;
 
-  if (isError || !data?.user || isOnboarded === false) {
+  if (isError || !data?.user || !data.user.isOnboarded) {
     return <Loader />; // Return loader while redirecting
   }
 

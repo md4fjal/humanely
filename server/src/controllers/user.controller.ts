@@ -78,3 +78,22 @@ export const changePassword = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Failed to change password" });
   }
 };
+
+export const completeOnboarding = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.userId;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: { isOnboarded: true } },
+      { new: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "Onboarding completed", user });
+  } catch (e) {
+    return res.status(500).json({ message: "Failed to complete onboarding" });
+  }
+};

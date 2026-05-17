@@ -16,3 +16,8 @@ export const changePassword = (data: any): Promise<any> =>
     method: "POST",
     body: JSON.stringify(data),
   });
+
+export const completeOnboarding = (): Promise<any> =>
+  fetcher(`${BASE_URL}/user/onboard`, {
+    method: "PUT",
+  });

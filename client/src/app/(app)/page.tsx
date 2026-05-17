@@ -10,7 +10,23 @@ import {
 } from "@/features/log/hooks";
 import ScoreRing from "@/components/ScoreRing";
 import TraitBar from "@/components/TraitBar";
-import GrowthChart from "@/components/GrowthChart";
+import dynamic from "next/dynamic";
+
+const GrowthChart = dynamic(() => import("@/components/GrowthChart"), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        height: 200,
+        background: "#12121A",
+        borderRadius: 16,
+        border: "1px solid #1E1E2E",
+        animation: "pulse 2s ease-in-out infinite",
+      }}
+    />
+  ),
+});
+
 import { X, TrendingUp } from "lucide-react";
 
 const TRAIT_ORDER = [

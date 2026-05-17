@@ -10,6 +10,7 @@ export interface IUser extends Document {
   googleId?: string;
   refreshToken?: string;
   isVerified: boolean;
+  isOnboarded: boolean;
   verificationOtp?: string;
   verificationOtpExpiresAt?: Date;
   passwordResetToken?: string;
@@ -27,6 +28,7 @@ const userSchema = new Schema<IUser>(
     googleId: { type: String, unique: true, sparse: true },
     refreshToken: { type: String, select: false },
     isVerified: { type: Boolean, default: false },
+    isOnboarded: { type: Boolean, default: false },
     verificationOtp: { type: String },
     verificationOtpExpiresAt: { type: Date },
     passwordResetToken: { type: String },

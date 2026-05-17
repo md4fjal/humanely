@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useSetIntention } from "@/features/log/hooks";
+import { useCompleteOnboarding } from "@/features/user/hooks";
 
 const SLIDES = [
   {
@@ -35,6 +36,7 @@ const INTENTION_CHIPS = [
 export default function OnboardingPage() {
   const router = useRouter();
   const { mutate: setIntention, isPending } = useSetIntention();
+  const { mutate: completeOnboarding, isPending: isCompletingOnboarding } = useCompleteOnboarding();
   const [step, setStep] = useState<"welcome" | "slides" | "intention">(
     "welcome",
   );
@@ -60,14 +62,20 @@ export default function OnboardingPage() {
     if (intention) {
       setIntention(intention, {
         onSuccess: () => {
-          localStorage.setItem("ensanit_onboarded", "true");
-          router.push("/");
+          completeOnboarding(undefined, {
+            onSuccess: () => {
+              router.push("/");
+            },
+          });
         },
       });
     } else {
       // Skip
-      localStorage.setItem("ensanit_onboarded", "true");
-      router.push("/");
+      completeOnboarding(undefined, {
+        onSuccess: () => {
+          router.push("/");
+        },
+      });
     }
   }
 
@@ -373,24 +381,26 @@ export default function OnboardingPage() {
               >
                 <button
                   className="btn-gold"
-                  disabled={isPending || !intentionInput.trim()}
+                  disabled={isPending || isCompletingOnboarding || !intentionInput.trim()}
                   onClick={() => handleSetIntention()}
                 >
-                  {isPending ? "Setting..." : "Set My Intention ✦"}
+                  {isPending || isCompletingOnboarding ? "Saving..." : "Set My Intention ✦"}
                 </button>
                 <button
                   onClick={() => handleSetIntention("")}
+                  disabled={isCompletingOnboarding}
                   style={{
                     background: "none",
                     border: "none",
                     color: "#4A475E",
                     fontFamily: "DM Sans, sans-serif",
                     fontSize: 13,
-                    cursor: "pointer",
+                    cursor: isCompletingOnboarding ? "not-allowed" : "pointer",
                     textAlign: "center",
                     padding: "8px 0",
                     textDecoration: "underline",
                     textDecorationColor: "transparent",
+                    opacity: isCompletingOnboarding ? 0.5 : 1,
                   }}
                 >
                   I'll set one later

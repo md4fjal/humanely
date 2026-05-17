@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import MoreDrawer from "./MoreDrawer";
+import dynamic from "next/dynamic";
+const MoreDrawer = dynamic(() => import("./MoreDrawer"), {
+  ssr: false,
+});
 
 const tabs = [
   { href: "/", label: "HOME", icon: "◎" },
