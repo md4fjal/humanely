@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import otpGenerator from "otp-generator";
 import { User } from "../models/user.model.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
-import { sendEmail, sendPasswordResetEmail } from "../utils/email.js";
+import { sendEmail, sendOtpVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail } from "../utils/email.js";
 import crypto from "crypto";
 import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -49,15 +49,7 @@ export const signup = async (req: Request, res: Response) => {
       verificationOtpExpiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
     });
 
-    await sendEmail({
-      to: email,
-      subject: "Verify Your Humanely Account",
-      html: `
-        <h1>Welcome to Humanely!</h1>
-        <p>Your verification code is: <strong>${otp}</strong></p>
-        <p>This code will expire in 10 minutes.</p>
-      `,
-    });
+    await sendOtpVerificationEmail(email, otp, name);
 
     return res.status(201).json({ message: "User registered. Please verify your email with the OTP sent." });
   } catch (error) {
@@ -97,6 +89,11 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
     user.refreshToken = refreshToken;
     await user.save();
+
+    // Send welcome email after successful verification
+    await sendWelcomeEmail(user.email, user.name).catch((err) =>
+      console.error("Failed to send welcome email:", err)
+    );
 
     res.cookie("accessToken", accessToken, {
       ...COOKIE_OPTIONS,
