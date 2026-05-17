@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { updateProfile, resetData } from "./api";
+import { updateProfile, resetData, changePassword } from "./api";
 import { authKeys } from "../auth/hooks";
 import { logKeys } from "../log/hooks";
 
@@ -27,5 +27,15 @@ export const useResetData = () => {
       toast.success("All data reset successfully");
     },
     onError: () => toast.error("Couldn't reset data"),
+  });
+};
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: changePassword,
+    onSuccess: (data: any) => {
+      toast.success(data.message || "Password updated successfully");
+    },
+    onError: (err: Error) => toast.error(err.message || "Couldn't update password"),
   });
 };

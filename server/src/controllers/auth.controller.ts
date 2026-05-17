@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 import otpGenerator from "otp-generator";
 import { User } from "../models/user.model.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
-import { sendEmail } from "../utils/email.js";
+import { sendEmail, sendPasswordResetEmail } from "../utils/email.js";
+import crypto from "crypto";
 import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -315,5 +316,72 @@ export const googleLogin = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Google login error:", error);
     return res.status(500).json({ message: "Google login failed" });
+  }
+};
+
+// FORGOT PASSWORD
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      // Return 200 even if user not found to prevent email enumeration
+      return res.status(200).json({ message: "If that email is registered, a password reset link has been sent." });
+    }
+
+    if (user.authProvider === "google") {
+      return res.status(400).json({ message: "This account uses Google login. Password reset is not available." });
+    }
+
+    // Generate token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    
+    // Hash token for saving in DB
+    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+    await user.save();
+
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
+
+    await sendPasswordResetEmail(user.email, resetLink);
+
+    return res.status(200).json({ message: "If that email is registered, a password reset link has been sent." });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    return res.status(500).json({ message: "Failed to process forgot password request" });
+  }
+};
+
+// RESET PASSWORD
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token, password } = req.body;
+
+    // Hash token to compare with DB
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpiresAt: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Token is invalid or has expired" });
+    }
+
+    // Set new password
+    user.password = await bcrypt.hash(password, 10);
+    user.passwordResetToken = undefined;
+    user.passwordResetExpiresAt = undefined;
+    await user.save();
+
+    return res.status(200).json({ message: "Password has been successfully reset. You can now log in." });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    return res.status(500).json({ message: "Failed to reset password" });
   }
 };

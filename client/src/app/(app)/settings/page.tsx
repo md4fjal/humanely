@@ -5,7 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/features/auth/hooks";
-import { useUpdateProfile, useResetData } from "@/features/user/hooks";
+import { useUpdateProfile, useResetData, useChangePassword } from "@/features/user/hooks";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -15,6 +16,19 @@ export default function SettingsPage() {
 
   const [name, setName] = useState(authData?.user?.name || "");
   const [confirmReset, setConfirmReset] = useState(false);
+
+  const { mutate: changePassword, isPending: changingPassword } = useChangePassword();
+  const [passwordForm, setPasswordForm] = useState({ oldPassword: "", newPassword: "" });
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
+  const handleChangePassword = () => {
+    if (passwordForm.oldPassword && passwordForm.newPassword) {
+      changePassword(passwordForm, {
+        onSuccess: () => setPasswordForm({ oldPassword: "", newPassword: "" })
+      });
+    }
+  };
 
   function handleSaveName() {
     if (name.trim() && name.trim() !== authData?.user?.name) {
@@ -63,6 +77,63 @@ export default function SettingsPage() {
           Humanely is not a judge. It is a mirror. The goal is never to label you as good or bad — it is to illuminate the gap between who you are and who you intend to be, with compassion and curiosity.
         </p>
       </motion.div>
+
+      {authData?.user?.authProvider !== "google" && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="h-card" style={{ padding: 20, marginBottom: 16 }}>
+          <p className="section-label" style={{ marginBottom: 16 }}>Change Password</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showOldPassword ? "text" : "password"}
+                  className="h-input font-serif"
+                  placeholder="Current Password"
+                  value={passwordForm.oldPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, oldPassword: e.target.value })}
+                  style={{ fontSize: 16, padding: "10px 14px", width: "100%", paddingRight: 40 }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowOldPassword(!showOldPassword)}
+                  style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#7A7690", cursor: "pointer", display: "flex" }}
+                >
+                  {showOldPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+            <div>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  className="h-input font-serif"
+                  placeholder="New Password"
+                  value={passwordForm.newPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                  style={{ fontSize: 16, padding: "10px 14px", width: "100%", paddingRight: 40 }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#7A7690", cursor: "pointer", display: "flex" }}
+                >
+                  {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              <p style={{ fontSize: 12, color: "#7A7690", marginTop: 6, fontFamily: "DM Sans, sans-serif" }}>
+                Must be at least 8 characters long and contain at least one letter and one number.
+              </p>
+            </div>
+            <button
+              className="btn-ghost"
+              onClick={handleChangePassword}
+              disabled={changingPassword || !passwordForm.oldPassword || !passwordForm.newPassword}
+              style={{ padding: "10px 20px", alignSelf: "flex-start" }}
+            >
+              {changingPassword ? "Updating..." : "Update Password"}
+            </button>
+          </div>
+        </motion.div>
+      )}
 
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="h-card" style={{ padding: 20, marginBottom: 16 }}>
         <p className="section-label" style={{ marginBottom: 16 }}>Data & Privacy</p>

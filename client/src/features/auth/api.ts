@@ -38,3 +38,17 @@ export const logoutUser = () => {
     method: "POST",
   });
 };
+
+export const forgotPassword = (data: { email: string }) => {
+  return fetcher(`${BASE_URL}/auth/forgot-password`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const resetPassword = (data: { token: string; password: string }) => {
+  return fetcher(`${BASE_URL}/auth/reset-password`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};

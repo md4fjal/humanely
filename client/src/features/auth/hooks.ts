@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { BASE_URL, fetcher } from "@/lib/api";
-import { loginUser, logoutUser, signupUser, googleLoginUser, verifyOtpUser } from "./api";
+import { loginUser, logoutUser, signupUser, googleLoginUser, verifyOtpUser, forgotPassword, resetPassword } from "./api";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -97,3 +97,31 @@ export const useLogout = () => {
     },
   });
 };
+
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: forgotPassword,
+    onSuccess: (data: any) => {
+      toast.success(data.message || "Reset link sent");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Failed to send reset link");
+    },
+  });
+};
+
+export const useResetPassword = () => {
+  const router = useRouter();
+  
+  return useMutation({
+    mutationFn: resetPassword,
+    onSuccess: (data: any) => {
+      toast.success(data.message || "Password reset successfully");
+      router.push("/login");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Failed to reset password");
+    },
+  });
+};
+

@@ -12,6 +12,8 @@ export interface IUser extends Document {
   isVerified: boolean;
   verificationOtp?: string;
   verificationOtpExpiresAt?: Date;
+  passwordResetToken?: string;
+  passwordResetExpiresAt?: Date;
 }
 
 const userSchema = new Schema<IUser>(
@@ -27,6 +29,8 @@ const userSchema = new Schema<IUser>(
     isVerified: { type: Boolean, default: false },
     verificationOtp: { type: String },
     verificationOtpExpiresAt: { type: Date },
+    passwordResetToken: { type: String },
+    passwordResetExpiresAt: { type: Date },
   },
   { timestamps: true },
 );

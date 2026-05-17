@@ -7,9 +7,11 @@ import {
   refresh,
   logout,
   verifyOtp,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/auth.controller.js";
 import { validateRequest } from "../middleware/validate.middleware.js";
-import { signupSchema, loginSchema, verifyOtpSchema } from "../utils/validators.js";
+import { signupSchema, loginSchema, verifyOtpSchema, forgotPasswordSchema, resetPasswordSchema } from "../utils/validators.js";
 
 const router = Router();
 
@@ -25,6 +27,8 @@ router.use(authLimiter);
 router.post("/signup", validateRequest(signupSchema), signup);
 router.post("/verify-otp", validateRequest(verifyOtpSchema), verifyOtp);
 router.post("/login", validateRequest(loginSchema), login);
+router.post("/forgot-password", validateRequest(forgotPasswordSchema), forgotPassword);
+router.post("/reset-password", validateRequest(resetPasswordSchema), resetPassword);
 router.post("/google", googleLogin);
 router.post("/refresh", refresh);
 router.post("/logout", logout);
