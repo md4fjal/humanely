@@ -48,5 +48,8 @@ export const generateReflection = (): Promise<{ reflection: string }> =>
   fetcher(`${BASE_URL}/reflection/generate`, { method: "POST" });
 
 export const getAnalytics = (): Promise<{
-  history: { date: string; score: number; rating: string }[];
+  history: { date: string; score: number; rating: string; pos: number; neg: number; intention: string }[];
 }> => fetcher(`${BASE_URL}/log/analytics`);
+
+export const generateWeeklySummary = (): Promise<{ summary: string }> =>
+  fetcher(`${BASE_URL}/reflection/weekly`, { method: "POST" });

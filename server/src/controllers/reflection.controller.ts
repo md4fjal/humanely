@@ -97,6 +97,102 @@ Write a personal evening reflection for this person.`;
   }
 };
 
+// POST /api/reflection/weekly
+export const generateWeeklySummary = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    // Get last 7 days of logs
+    const logs = await DailyLog.find({ userId }).sort({ date: -1 }).limit(7);
+
+    if (!logs.length) {
+      return res.status(400).json({ message: "No logs found to summarize." });
+    }
+
+    const latestLog = logs[0];
+    const avgScore = Math.round(
+      logs.reduce((sum, log) => sum + log.humanityScore, 0) / logs.length
+    );
+    const totalPos = logs.reduce(
+      (sum, log) => sum + log.actions.filter((a: any) => a.type === "positive").length,
+      0
+    );
+    const totalNeg = logs.reduce(
+      (sum, log) => sum + log.actions.filter((a: any) => a.type === "negative").length,
+      0
+    );
+
+    // Filter out _id and other non-trait keys if any, though mongoose traits object is typed
+    const traits = latestLog.traits as any;
+    const traitsEntries = [
+      ["compassion", traits.compassion],
+      ["honesty", traits.honesty],
+      ["discipline", traits.discipline],
+      ["patience", traits.patience],
+      ["gratitude", traits.gratitude]
+    ];
+    
+    const sortedTraits = traitsEntries.sort((a, b) => (b[1] as number) - (a[1] as number));
+    const strongestTrait = sortedTraits[0];
+    const weakestTrait = sortedTraits[sortedTraits.length - 1];
+
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+
+    if (!geminiApiKey) {
+      const mockSummary = `Over the past ${logs.length} days, your average humanity score was ${avgScore}. You leaned into ${strongestTrait[0]} with a score of ${strongestTrait[1]}, showing great growth. Keep working on ${weakestTrait[0]} (${weakestTrait[1]}) for the week ahead. How might you bring more intention into your next choices?`;
+      return res.json({ summary: mockSummary });
+    }
+
+    const systemPrompt = `You are a compassionate, non-judgmental AI companion for a self-reflection app called Humanely. 
+Generate a thoughtful, personal weekly character summary.
+Speak directly to the user as "you". 
+Acknowledge both growth and moments of difficulty with equal warmth.
+Keep your reflection to 3-4 sentences maximum, then end with a single reflective question for the week ahead.
+Tone: a wise, warm friend on a quiet evening.`;
+
+    const userPrompt = `Data from the past week:
+- Average humanity score: ${avgScore}/100
+- Total growth actions: ${totalPos}
+- Total learning moments: ${totalNeg}
+- Strongest trait: ${strongestTrait[0]} (${strongestTrait[1]})
+- Needs most growth: ${weakestTrait[0]} (${weakestTrait[1]})
+
+Write a warm, insightful weekly summary.`;
+
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ parts: [{ text: userPrompt }] }],
+          generationConfig: {
+            temperature: 0.8,
+            maxOutputTokens: 300,
+          },
+        }),
+      }
+    );
+
+    if (!geminiRes.ok) {
+      const err = await geminiRes.text();
+      console.error("Gemini API error:", err);
+      const mockSummary = `Over the past ${logs.length} days, your average humanity score was ${avgScore}. You leaned into ${strongestTrait[0]} with a score of ${strongestTrait[1]}, showing great growth. Keep working on ${weakestTrait[0]} (${weakestTrait[1]}) for the week ahead. How might you bring more intention into your next choices?`;
+      return res.json({ summary: mockSummary });
+    }
+
+    const geminiData = await geminiRes.json();
+    const summary =
+      geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      `Over the past ${logs.length} days, your average humanity score was ${avgScore}. You leaned into ${strongestTrait[0]} with a score of ${strongestTrait[1]}, showing great growth. Keep working on ${weakestTrait[0]} (${weakestTrait[1]}) for the week ahead. How might you bring more intention into your next choices?`;
+
+    return res.json({ summary });
+  } catch (e) {
+    console.error("Weekly summary error:", e);
+    return res.status(500).json({ message: "Could not generate weekly summary" });
+  }
+};
+
 function buildMockReflection(
   intention: string,
   positive: string,

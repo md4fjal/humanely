@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import MoreDrawer from "./MoreDrawer";
 
 const tabs = [
   { href: "/", label: "HOME", icon: "◎" },
@@ -12,6 +14,7 @@ const tabs = [
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <nav className="bottom-nav">
@@ -83,7 +86,38 @@ export default function BottomNav() {
             </Link>
           );
         })}
+
+        <button
+          onClick={() => setDrawerOpen(true)}
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            padding: "12px 8px",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            transition: "all 0.18s ease",
+          }}
+        >
+          <span style={{ fontSize: 20, color: "#4A475E", lineHeight: 1 }}>···</span>
+          <span
+            style={{
+              fontFamily: "DM Sans, sans-serif",
+              fontSize: 9,
+              fontWeight: 600,
+              letterSpacing: "0.12em",
+              color: "#4A475E",
+            }}
+          >
+            MORE
+          </span>
+        </button>
       </div>
+      <MoreDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </nav>
   );
 }

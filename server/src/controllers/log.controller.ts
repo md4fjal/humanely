@@ -95,7 +95,17 @@ export const getTodayLog = async (req: Request, res: Response) => {
 
     let log = await DailyLog.findOne({ userId, date });
     if (!log) {
-      log = await DailyLog.create({ userId, date });
+      const latestLog = await DailyLog.findOne({ userId }).sort({ date: -1 });
+      if (latestLog) {
+        log = await DailyLog.create({
+          userId,
+          date,
+          traits: latestLog.traits,
+          humanityScore: latestLog.humanityScore,
+        });
+      } else {
+        log = await DailyLog.create({ userId, date });
+      }
     }
     return res.json({ log });
   } catch (e) {
@@ -228,11 +238,14 @@ export const getAnalytics = async (req: Request, res: Response) => {
       .sort({ date: -1 })
       .limit(7);
 
-    // Format for chart: { date, score, rating }
+    // Format for chart: { date, score, rating, pos, neg, intention }
     const history = logs.map((l) => ({
       date: l.date,
       score: l.humanityScore,
       rating: (l.humanityScore / 10).toFixed(1),
+      pos: l.actions.filter((a: any) => a.type === "positive").length,
+      neg: l.actions.filter((a: any) => a.type === "negative").length,
+      intention: l.intention,
     })).reverse();
 
     return res.json({ history });

@@ -8,6 +8,7 @@ import {
   addAction,
   removeAction,
   generateReflection,
+  generateWeeklySummary,
   getAnalytics,
   type DailyLog,
 } from "./api";
@@ -123,5 +124,12 @@ export const useAnalytics = () => {
     queryFn: getAnalytics,
     select: (data) => data.history,
     staleTime: 60_000,
+  });
+};
+
+export const useGenerateWeekly = () => {
+  return useMutation({
+    mutationFn: generateWeeklySummary,
+    onError: () => toast.error("Could not connect. Please try again."),
   });
 };

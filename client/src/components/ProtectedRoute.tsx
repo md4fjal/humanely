@@ -28,5 +28,9 @@ export default function ProtectedRoute({
 
   if (isLoading || isOnboarded === null) return <Loader />;
 
+  if (isError || !data?.user || isOnboarded === false) {
+    return <Loader />; // Return loader while redirecting
+  }
+
   return <>{children}</>;
 }
