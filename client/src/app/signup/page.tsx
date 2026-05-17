@@ -125,6 +125,21 @@ export default function Signup() {
               boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
             }}
           >
+            <h1
+              style={{
+                position: "absolute",
+                width: "1px",
+                height: "1px",
+                padding: "0",
+                margin: "-1px",
+                overflow: "hidden",
+                clip: "rect(0, 0, 0, 0)",
+                border: "0",
+              }}
+            >
+              Sign Up for Ensanit — Start Mindful Daily Reflection & Character Mirroring
+            </h1>
+
             <div style={{ textAlign: "center", marginBottom: 32 }}>
               <h2
                 style={{

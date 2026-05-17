@@ -58,6 +58,21 @@ export default function LoginPage() {
           boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
         }}
       >
+        <h1
+          style={{
+            position: "absolute",
+            width: "1px",
+            height: "1px",
+            padding: "0",
+            margin: "-1px",
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            border: "0",
+          }}
+        >
+          Ensanit — Mindful Daily Character Tracker & Humanity Score Mirror
+        </h1>
+
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <h2
             style={{
