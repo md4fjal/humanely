@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Heart, ShieldCheck, Sliders, Hourglass, Sparkles, LucideIcon } from "lucide-react";
 
-const TRAIT_ICONS: Record<string, string> = {
-  compassion: "♡",
-  honesty: "◎",
-  discipline: "◈",
-  patience: "〜",
-  gratitude: "✦",
+const TRAIT_ICONS: Record<string, LucideIcon> = {
+  compassion: Heart,
+  honesty: ShieldCheck,
+  discipline: Sliders,
+  patience: Hourglass,
+  gratitude: Sparkles,
 };
 
 interface TraitBarProps {
@@ -25,7 +26,7 @@ function getBarColor(score: number) {
 export default function TraitBar({ name, score, delay = 0 }: TraitBarProps) {
   const [width, setWidth] = useState(0);
   const color = getBarColor(score);
-  const icon = TRAIT_ICONS[name] || "•";
+  const Icon = TRAIT_ICONS[name];
   const displayName = name.charAt(0).toUpperCase() + name.slice(1);
 
   useEffect(() => {
@@ -37,8 +38,8 @@ export default function TraitBar({ name, score, delay = 0 }: TraitBarProps) {
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
       {/* Icon + label */}
       <div style={{ width: 110, display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-        <span style={{ color: color, fontSize: 16, width: 20, textAlign: "center" }}>
-          {icon}
+        <span style={{ color: color, display: "flex", alignItems: "center", justifyContent: "center", width: 20 }}>
+          {Icon ? <Icon size={16} /> : "•"}
         </span>
         <span
           style={{

@@ -23,6 +23,7 @@ export const useAuth = () => {
   return useQuery({
     queryKey: authKeys.me(),
     queryFn: () => fetcher(`${BASE_URL}/user/profile`),
+    staleTime: 5 * 60 * 1000,
   });
 };
 

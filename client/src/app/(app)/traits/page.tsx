@@ -4,12 +4,14 @@ import { motion } from "framer-motion";
 import { useLog } from "@/features/log/hooks";
 import TraitBar from "@/components/TraitBar";
 
+import { Heart, ShieldCheck, Sliders, Hourglass, Sparkles } from "lucide-react";
+
 const TRAIT_ORDER = [
-  { key: "compassion", icon: "♡", description: "Empathy and care for others" },
-  { key: "honesty", icon: "◎", description: "Integrity and truthfulness" },
-  { key: "discipline", icon: "◈", description: "Consistency and self-control" },
-  { key: "patience", icon: "〜", description: "Calm under pressure" },
-  { key: "gratitude", icon: "✦", description: "Appreciation and awareness" },
+  { key: "compassion", icon: Heart, description: "Empathy and care for others" },
+  { key: "honesty", icon: ShieldCheck, description: "Integrity and truthfulness" },
+  { key: "discipline", icon: Sliders, description: "Consistency and self-control" },
+  { key: "patience", icon: Hourglass, description: "Calm under pressure" },
+  { key: "gratitude", icon: Sparkles, description: "Appreciation and awareness" },
 ] as const;
 
 function getScoreColor(score: number) {
@@ -129,7 +131,10 @@ export default function TraitsPage() {
                 color: "#5BB87A",
               }}
             >
-              {strongest?.icon}
+              {(() => {
+                const Icon = strongest?.icon;
+                return Icon ? <Icon size={22} /> : null;
+              })()}
             </div>
             <p
               style={{
@@ -181,7 +186,10 @@ export default function TraitsPage() {
                 color: "#C8973A",
               }}
             >
-              {weakest?.icon}
+              {(() => {
+                const Icon = weakest?.icon;
+                return Icon ? <Icon size={22} /> : null;
+              })()}
             </div>
             <p
               style={{

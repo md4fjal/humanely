@@ -8,11 +8,13 @@ const MoreDrawer = dynamic(() => import("./MoreDrawer"), {
   ssr: false,
 });
 
+import { Home, PenTool, Sparkles, Award, MoreHorizontal } from "lucide-react";
+
 const tabs = [
-  { href: "/", label: "HOME", icon: "◎" },
-  { href: "/log", label: "LOG", icon: "✎" },
-  { href: "/reflect", label: "REFLECT", icon: "✦" },
-  { href: "/traits", label: "TRAITS", icon: "◈" },
+  { href: "/", label: "HOME", icon: Home },
+  { href: "/log", label: "LOG", icon: PenTool },
+  { href: "/reflect", label: "REFLECT", icon: Sparkles },
+  { href: "/traits", label: "TRAITS", icon: Award },
 ];
 
 export default function BottomNav() {
@@ -66,13 +68,14 @@ export default function BottomNav() {
               )}
               <span
                 style={{
-                  fontSize: 20,
                   color: isActive ? "#C8973A" : "#4A475E",
                   transition: "color 0.18s ease",
-                  lineHeight: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                {tab.icon}
+                <tab.icon size={20} />
               </span>
               <span
                 style={{
@@ -106,7 +109,9 @@ export default function BottomNav() {
             transition: "all 0.18s ease",
           }}
         >
-          <span style={{ fontSize: 20, color: "#4A475E", lineHeight: 1 }}>···</span>
+          <span style={{ color: "#4A475E", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <MoreHorizontal size={20} />
+          </span>
           <span
             style={{
               fontFamily: "DM Sans, sans-serif",

@@ -7,19 +7,21 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useSetIntention } from "@/features/log/hooks";
 import { useCompleteOnboarding } from "@/features/user/hooks";
 
+import { Heart, Compass, Sparkles } from "lucide-react";
+
 const SLIDES = [
   {
-    icon: "◎",
+    icon: Heart,
     title: "The Mirror",
     body: "This is not an app that judges you. It is a space where you can be honest with yourself. Every action you log is a conversation between you and who you want to become.",
   },
   {
-    icon: "✦",
+    icon: Compass,
     title: "The Score",
     body: "Your Humanity Score is not your worth. It is a reflection of your recent choices — a compass, not a verdict. It changes every day because you do.",
   },
   {
-    icon: "〜",
+    icon: Sparkles,
     title: "The Reflection",
     body: "Each evening, your AI companion will sit with you and help you understand your day — without shame, without judgment. Just awareness.",
   },
@@ -233,7 +235,10 @@ export default function OnboardingPage() {
                     margin: "0 auto 24px",
                   }}
                 >
-                  {SLIDES[slideIndex].icon}
+                  {(() => {
+                    const Icon = SLIDES[slideIndex].icon;
+                    return <Icon size={28} />;
+                  })()}
                 </div>
                 <h2
                   style={{
